@@ -1,0 +1,46 @@
+# See https://atom.io/docs/latest/hacking-atom-package-word-count#menus for more details
+'context-menu':
+  'atom-text-editor': [
+    {
+      'label': 'Show/Hide Test Panel'
+      'command': 'atom-mocha:toggle'
+    },
+    {
+      'label': 'Run Test (Current File)'
+      'command': 'atom-mocha:runTestFileFromEditor'
+    }
+  ]
+  '.tree-view .directory span.icon-file-directory' : [
+      {
+          'label': 'Run Tests (Whole Folder)'
+          'command': 'atom-mocha:runTestFolder'
+      }
+  ]
+  '.tree-view .file .name[data-name$=\\.js], .tree-view .file .name[data-name$=\\.coffee]' : [
+      {
+          'label': 'Run Test'
+          'command': 'atom-mocha:runTestFile'
+      }
+  ]
+'menu': [
+  {
+    'label': 'Packages'
+    'submenu': [
+      'label': 'atom-mocha'
+      'submenu': [
+        {
+          'label': 'Show/Hide Test Panel'
+          'command': 'atom-mocha:toggle'
+        },
+        {
+          'label': 'Run Test (Current File)'
+          'command': 'atom-mocha:runTestFileFromEditor'
+        },
+        {
+          'label': 'Re-run Tests'
+          'command': 'atom-mocha:rerunTests'
+        }
+      ]
+    ]
+  }
+]

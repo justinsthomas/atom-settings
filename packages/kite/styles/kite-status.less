@@ -1,0 +1,36 @@
+@import "ui-variables";
+
+kite-status {
+  kite-logo svg {
+    height: 16px;
+  }
+
+  &[status="unknown"] {
+    kite-logo svg polygon {
+      fill: @text-color;
+    }
+  }
+
+  &[status="authenticated"],
+  &[status="whitelisted"] {
+    kite-logo svg polygon {
+      fill: @text-color-info;
+    }
+  }
+
+  &[status="reachable"],
+  &[status="authenticated"][is-active-python-file] {
+    kite-logo svg polygon {
+      fill: @text-color-warning;
+    }
+  }
+
+  &[status="uninstalled"],
+  &[status="unsupported"],
+  &[status="running"],
+  &[status="installed"] {
+    kite-logo svg polygon {
+      fill: @text-color-error;
+    }
+  }
+}

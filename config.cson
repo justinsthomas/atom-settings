@@ -1,0 +1,116 @@
+"*":
+  "atom-beautify":
+    general:
+      analytics: false
+      beautifyEntireFileOnSave: false
+    js:
+      end_with_newline: true
+      indent_char: "    "
+      space_after_anon_function: true
+  "atom-css-comb":
+    projectConfigs: ".csscomb.json"
+  "atom-csscomb": {}
+  "atom-ternjs":
+    displayAboveSnippets: true
+  core:
+    closeDeletedFileTabs: true
+    customFileTypes:
+      "source.ini": [
+        ".buckconfig"
+        ".flowconfig"
+        ".hgrc"
+      ]
+      "source.json": [
+        "BUCK.autodeps"
+      ]
+      "source.python": [
+        "BUCK"
+      ]
+      "text.html.nunjucks": [
+        "j2"
+      ]
+    disabledPackages: [
+      "formatter"
+      "atom-wallaby"
+      "jump-to-import"
+      "linter-stylelint"
+      "kite"
+      "atom-mocha"
+      "mocha-test-runner"
+      "nuclide"
+      "css-comb"
+    ]
+    excludeVcsIgnoredPaths: false
+    ignoredNames: [
+      ".git"
+      ".hg"
+      ".svn"
+      ".DS_Store"
+      "._*"
+      "Thumbs.db"
+      "desktop.ini"
+      "venv"
+      ".tmp"
+      "dist"
+      "node_modules"
+      "bower_components"
+      ".babel"
+      ".git"
+      "errorShots"
+      "coverage"
+      "js-coverage"
+    ]
+    packagesWithKeymapsDisabled: [
+      "csscomb"
+      "atom-csscomb"
+    ]
+    projectHome: "/Users/thomasju1"
+    telemetryConsent: "no"
+    themes: [
+      "seti-ui"
+      "seti-syntax"
+    ]
+    titleBar: "custom"
+  editor:
+    fontFamily: "Fira Code"
+    fontSize: 16
+    invisibles: {}
+    showIndentGuide: true
+    showInvisibles: true
+    tabLength: 4
+    tabType: "soft"
+  "exception-reporting":
+    userId: "7320653e-9450-b63a-51b9-e5a0813be886"
+  "formatter-jsbeautify":
+    less:
+      enable: false
+  "fuzzy-finder":
+    preserveLastSearch: true
+  kite:
+    showKiteTourOnStatup: false
+  linter: {}
+  "linter-eslint":
+    fixOnSave: true
+  "linter-ui-default":
+    panelHeight: 141
+    showPanel: true
+  "mocha-test-runner":
+    showContextInformation: true
+  "node-debugger":
+    nodePath: "/Users/thomasju1/n/bin/node"
+  nuclide:
+    "nuclide-debugger-native": {}
+    "nuclide-file-tree": {}
+    "nuclide-health":
+      toolbarJewel: "None"
+    "nuclide-home":
+      showHome: false
+    "nuclide-python": {}
+  "seti-ui": {}
+  "split-diff":
+    ignoreWhitespace: true
+  "tree-view":
+    alwaysOpenExisting: true
+    focusOnReveal: false
+  welcome:
+    showOnStartup: false

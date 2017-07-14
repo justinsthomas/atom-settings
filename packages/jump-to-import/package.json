@@ -1,0 +1,67 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "/private/var/folders/xm/11784h6s5vnd_78h46gx27gnph44x0/T/d-117231-23985-10xmcwu/package.tgz",
+        "scope": null,
+        "escapedName": null,
+        "name": null,
+        "rawSpec": "/private/var/folders/xm/11784h6s5vnd_78h46gx27gnph44x0/T/d-117231-23985-10xmcwu/package.tgz",
+        "spec": "/private/var/folders/xm/11784h6s5vnd_78h46gx27gnph44x0/T/d-117231-23985-10xmcwu/package.tgz",
+        "type": "local"
+      },
+      "/private/var/folders/xm/11784h6s5vnd_78h46gx27gnph44x0/T/apm-install-dir-117231-23985-1syokou"
+    ]
+  ],
+  "_from": "../d-117231-23985-10xmcwu/package.tgz",
+  "_id": "jump-to-import@2.1.1",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/jump-to-import",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "/private/var/folders/xm/11784h6s5vnd_78h46gx27gnph44x0/T/d-117231-23985-10xmcwu/package.tgz",
+    "scope": null,
+    "escapedName": null,
+    "name": null,
+    "rawSpec": "/private/var/folders/xm/11784h6s5vnd_78h46gx27gnph44x0/T/d-117231-23985-10xmcwu/package.tgz",
+    "spec": "/private/var/folders/xm/11784h6s5vnd_78h46gx27gnph44x0/T/d-117231-23985-10xmcwu/package.tgz",
+    "type": "local"
+  },
+  "_requiredBy": [
+    "#USER"
+  ],
+  "_resolved": "file:../d-117231-23985-10xmcwu/package.tgz",
+  "_shasum": "c03bfc135ad0c6165e0c74b24a898286b89ad45c",
+  "_shrinkwrap": null,
+  "_spec": "/private/var/folders/xm/11784h6s5vnd_78h46gx27gnph44x0/T/d-117231-23985-10xmcwu/package.tgz",
+  "_where": "/private/var/folders/xm/11784h6s5vnd_78h46gx27gnph44x0/T/apm-install-dir-117231-23985-1syokou",
+  "activationCommands": {
+    "atom-workspace": "jump-to-import:go-to-module"
+  },
+  "bugs": {
+    "url": "https://github.com/alexheyd/atom-jump-to-import/issues"
+  },
+  "dependencies": {
+    "find-babel-config": "^1.0.1",
+    "symbols-view": "git+https://github.com/atom/symbols-view.git"
+  },
+  "description": "Jump to ES6 import module definitions, including methods.",
+  "devDependencies": {},
+  "engines": {
+    "atom": ">=1.0.0 <2.0.0"
+  },
+  "homepage": "https://github.com/alexheyd/atom-jump-to-import#readme",
+  "keywords": [],
+  "license": "MIT",
+  "main": "./lib/jump-to-import",
+  "name": "jump-to-import",
+  "optionalDependencies": {},
+  "readme": "# jump-to-import package\n\n*Replacement package for the `ember-import-navigator` Atom package.*\n\nContributions and Pull Requests are welcome.\n\n## Limitations\n- `package.json` required at root of project\n  - used to figure out the project name to use when converting magic paths to the real file path\n\n## Features\n- Jump to imported file from path, variable name, or method name\n- **NPM Module Support** with Browserify (as long as the path is formatted like `npm:path-to-package`)\n  - it grabs the package's entry file from its `package.json` `main` value\n- `babel-plugin-module-resolver` support: loads path overrides from project's `.babelrc`\n- Multiple project root folder support\n- Supports multi-line destructured `import` statements\n- Configurable settings:\n  - Custom path overrides\n  - Ability to disable custom path overrides and `.babelrc` overrides\n  - Prioritized list of file extensions to check (defaults to `js` and `jsx`)\n\n## Usage\nPress CTRL+ALT+E with the cursor either on a CommonJS `import` path, or the imported namespace, or a method on the imported namespace to open that file and jump to the relevant method, if applicable. For functions declared in the same file, it uses Atom's native `Symbols View` package.\n\n### Example\nWith the following `import` line:\n\n```javascript\n// assuming the project's name is defined as `my-project` in `package.json`\n// with cursor on, or selecting, `FooMixin` or the path, will open project-root/app/mixins/foo.js\nimport FooMixin from 'my-project/mixins/foo'\n\n// with cursor on, or selecting, bar, will open project-root/app/mixins/foo.js and jump to the bar() method\nFooMixin.bar();\n```\n\n### Plugin Settings\n\nYou can define your own path overrides in Settings.\n\nDefault overrides are:\n- `$PROJECT:app`\n- `$PROJECT/config:config`\n\nWith the above default settings (for Ember projects) we would get the following behavior:\n- `PROJECT_NAME/components/foo` -> `app/components/foo.js`\n- `PROJECT_NAME/config/environment` -> `config/environment.js`\n\n`PROJECT_NAME` in the path needs to match the project name defined in your `package.json` file in the root directory.\n\nThe package will look for a `package.json` file in every root directory of the project to determine project names.\n\nYou can now also define a list of file extensions to try and open.\n\n## .babelrc Support\n\nSupport for `babel-plugin-module-resolver` has been added, where you can have the babel module aliases used for the file lookups.\n\n```\n{\n  \"plugins\": [\n      [\"module-resolver\", {\n        \"root\": [\"./src\"],\n        \"alias\": {\n          \"utils\": \"./src/utils\"\n        }\n      }]\n    ]\n}\n```\n\nWith the above `.babelrc` file, a path of `utils/test` will resolve to `./src/utils/test.js`\n\n**Note:** The `pathOverrides` defined in `Settings` have priority over `.babelrc` aliases.\n\n## Coming Soon\n- Ability to define a project name if no `package.json` file is present\n\n## Known issues\n- Soft wrap and code folding break opening modules when cursor is in string. (atom/atom#8685)\n- Only supports one project root folder\n",
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexheyd/atom-jump-to-import.git"
+  },
+  "version": "2.1.1"
+}

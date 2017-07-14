@@ -1,0 +1,86 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "/private/var/folders/xm/11784h6s5vnd_78h46gx27gnph44x0/T/d-117223-83713-wtwd1a/package.tgz",
+        "scope": null,
+        "escapedName": null,
+        "name": null,
+        "rawSpec": "/private/var/folders/xm/11784h6s5vnd_78h46gx27gnph44x0/T/d-117223-83713-wtwd1a/package.tgz",
+        "spec": "/private/var/folders/xm/11784h6s5vnd_78h46gx27gnph44x0/T/d-117223-83713-wtwd1a/package.tgz",
+        "type": "local"
+      },
+      "/private/var/folders/xm/11784h6s5vnd_78h46gx27gnph44x0/T/apm-install-dir-117223-83713-luau0r"
+    ]
+  ],
+  "_from": "../d-117223-83713-wtwd1a/package.tgz",
+  "_id": "atom-wallaby@1.0.16",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/atom-wallaby",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "/private/var/folders/xm/11784h6s5vnd_78h46gx27gnph44x0/T/d-117223-83713-wtwd1a/package.tgz",
+    "scope": null,
+    "escapedName": null,
+    "name": null,
+    "rawSpec": "/private/var/folders/xm/11784h6s5vnd_78h46gx27gnph44x0/T/d-117223-83713-wtwd1a/package.tgz",
+    "spec": "/private/var/folders/xm/11784h6s5vnd_78h46gx27gnph44x0/T/d-117223-83713-wtwd1a/package.tgz",
+    "type": "local"
+  },
+  "_requiredBy": [
+    "#USER"
+  ],
+  "_resolved": "file:../d-117223-83713-wtwd1a/package.tgz",
+  "_shasum": "9c61d5f753e001ce6a3e34405dcd0c689633d8bc",
+  "_shrinkwrap": null,
+  "_spec": "/private/var/folders/xm/11784h6s5vnd_78h46gx27gnph44x0/T/d-117223-83713-wtwd1a/package.tgz",
+  "_where": "/private/var/folders/xm/11784h6s5vnd_78h46gx27gnph44x0/T/apm-install-dir-117223-83713-luau0r",
+  "bugs": {
+    "url": "https://github.com/wallabyjs/atom-wallaby/issues"
+  },
+  "consumedServices": {
+    "status-bar": {
+      "versions": {
+        "^1.0.0": "statusBar"
+      }
+    }
+  },
+  "dependencies": {
+    "adm-zip-mit": "^0.4.8",
+    "atom-space-pen-views": "^2.0.5",
+    "fs-extra": "^0.22.1",
+    "phantomjs-prebuilt": "^2.1.12",
+    "q": "^1.4.1",
+    "request": "^2.61.0"
+  },
+  "description": "Wallaby.js Atom package",
+  "devDependencies": {},
+  "engines": {
+    "atom": ">=1.0.0 <2.0.0"
+  },
+  "homepage": "https://github.com/wallabyjs/atom-wallaby#readme",
+  "keywords": [
+    "wallaby.js",
+    "TDD",
+    "BDD",
+    "testing",
+    "code coverage",
+    "ES6",
+    "ES7",
+    "JavaScript",
+    "CoffeeScript",
+    "TypeScript"
+  ],
+  "license": "MIT",
+  "main": "./lib/wallaby",
+  "name": "atom-wallaby",
+  "optionalDependencies": {},
+  "readme": "# [Wallaby.js](http://wallabyjs.com) Atom package\n\n## Quick links\n\n- [Getting Started tutorial](http://wallabyjs.com/docs/intro/get-started-atom.html).\n- [Main repository for issues/questions](https://github.com/wallabyjs/public).\n\n## The Awesomeness!\n![Wallaby.js in Atom](https://cloud.githubusercontent.com/assets/979966/8794065/7a7f72d8-2fc2-11e5-8383-f4e168abb36c.gif)",
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wallabyjs/atom-wallaby.git"
+  },
+  "version": "1.0.16"
+}

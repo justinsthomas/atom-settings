@@ -1,0 +1,486 @@
+{% from 'macros/urls.j2' import productUrl, imageUrl with context %}
+{% from "macros/product-image.j2" import productImage, productImageSchemaProps  with context %}
+
+
+{#-
+    displayProductTile
+
+    Description:
+        Display a product tile with its respective content.
+
+        tileTemplate can be one of (see https://urbnit.atlassian.net/wiki/display/UW/Category+Product+Tile#CategoryProductTile-AlternateProductTileLayouts):
+        - 'REGULAR' (default)
+        - 'TITLE_AND_PRICE'
+        - 'TITLE_ONLY'
+        - 'SKU_SPECIFIC'
+        - 'NO_DETAILS'
+
+        Calls the private _displayTile macro internally.
+
+    Usage:
+        From a category page: displayProductTile(product.allMeta.tile, tileTemplate=core.flatNavigation[categorySlug].browseDisplayPreferences.tile)
+        From a product page: displayProductTile(product, tileTemplate='TITLE_ONLY')
+        From a favorites page: displayProductTile(product, tileTemplate='NO_DETAILS')
+-#}
+
+{%- macro displayProductTile(tile, colorCode, imageId, altImageId, tileTemplate='DEFAULT', isAddToCart=False, isOwner=False, displayOverlayControls=True, productIndex=0, overrideUrl='', shoppable=True, analytics=None, attributes=[], displayVideo=False, analyticsQuickShop=None, lazy=False) -%}
+
+    {%- if tileTemplate == 'TITLE_AND_PRICE' %}
+        {{ _displayTile(tile, colorCode, imageId, altImageId, tileTemplate, isAddToCart, isOwner,
+            displaySwatches=false,
+            displayVideo=displayVideo,
+            displayReviews=false,
+            displayLikes=false,
+            displayBadges=false,
+            displayOverlayControls=displayOverlayControls,
+            productIndex=productIndex,
+            overrideUrl=overrideUrl,
+            shoppable=shoppable,
+            analytics=analytics,
+            attributes=attributes,
+            analyticsQuickShop=analyticsQuickShop,
+            lazy=lazy) }}
+    {%- elif tileTemplate == 'TITLE_ONLY' %}
+        {{ _displayTile(tile, colorCode, imageId, altImageId, tileTemplate, isAddToCart, isOwner,
+            displayPrice=false,
+            displaySwatches=false,
+            displayVideo=displayVideo,
+            displayBadges=false,
+            displayReviews=false,
+            displayLikes=false,
+            displayOverlayControls=displayOverlayControls,
+            productIndex=productIndex,
+            overrideUrl=overrideUrl,
+            shoppable=shoppable,
+            analytics=analytics,
+            attributes=attributes,
+            analyticsQuickShop=analyticsQuickShop,
+            lazy=lazy) }}
+    {%- elif tileTemplate == 'NO_DETAILS' %}
+        {{ _displayTile(tile, colorCode, imageId, altImageId, tileTemplate, isAddToCart, isOwner,
+            displayVideo=displayVideo,
+            displayReviews=false,
+            displayLikes=false,
+            displayOverlayControls=displayOverlayControls,
+            productIndex=productIndex,
+            overrideUrl=overrideUrl,
+            shoppable=shoppable,
+            analytics=analytics,
+            attributes=attributes,
+            analyticsQuickShop=analyticsQuickShop,
+            lazy=lazy) }}
+    {%- elif tileTemplate == 'SKU_SPECIFIC' %}
+        {{ _displayTile(tile, colorCode, imageId, altImageId, tileTemplate, isAddToCart, isOwner,
+            displayVideo=displayVideo,
+            displayReviews=false,
+            displayLikes=false,
+            displayBadges=false,
+            displayOverlayControls=displayOverlayControls,
+            displaySize=true,
+            productIndex=productIndex,
+            overrideUrl=overrideUrl,
+            shoppable=shoppable,
+            analytics=analytics,
+            attributes=attributes,
+            analyticsQuickShop=analyticsQuickShop,
+            lazy=lazy) }}
+    {%- elif tileTemplate == 'TITLE_PRICE_NUM_COLORS' %}
+        {{ _displayTile(tile, colorCode, imageId, altImageId, tileTemplate, isAddToCart, isOwner,
+            displayVideo=displayVideo,
+            displayReviews=false,
+            displayLikes=false,
+            displayBadges=false,
+            displayOverlayControls=displayOverlayControls,
+            displaySize=false,
+            productIndex=productIndex,
+            overrideUrl=overrideUrl,
+            shoppable=shoppable,
+            analytics=analytics,
+            attributes=attributes,
+            analyticsQuickShop=analyticsQuickShop,
+            lazy=lazy) }}
+    {%- else %}
+        {#- tileTemplate == 'DEFAULT' #}
+        {{ _displayTile(tile, colorCode, imageId, altImageId, tileTemplate, isAddToCart, isOwner,
+            displayReviews=false,
+            displayLikes=false,
+            displayVideo=displayVideo,
+            displayOverlayControls=displayOverlayControls,
+            productIndex=productIndex,
+            overrideUrl=overrideUrl,
+            shoppable=shoppable,
+            analytics=analytics,
+            attributes=attributes,
+            analyticsQuickShop=analyticsQuickShop,
+            lazy=lazy) }}
+    {% endif -%}
+{%- endmacro -%}
+
+
+{#-
+    _displayTile
+
+    Description:
+        Output product tile markup with a tileTemplate and optional features
+        enabled (all enabled by default) or disabled.
+-#}
+
+{%- macro _displayTile(tile, colorCode, imageId, altImageId, tileTemplate, isAddToCart, isOwner,  displayPrice=true, displaySwatches=true, displayVideo=false, displayBadges=true, displayReviews=true, hideDetails=false, displayLikes=true, displayOverlayControls=true, displaySize=false,productIndex=0, overrideUrl='', shoppable=true, analytics=None, attributes=[], analyticsQuickShop=None, lazy=False) -%}
+
+{% set tileTemplate = tileTemplate | lower %}
+
+{# Set Product URL #}
+{%- if overrideUrl != '' -%}
+    {% set productLink = overrideUrl -%}
+{%- else -%}
+    {% set productLink = productUrl(tile.product.productSlug, tile.product.queryParams) %}
+{%- endif -%}
+
+<div class="dom-product-tile c-product-tile c-product-tile--{{ tileTemplate }} js-product-tile"
+    data-product-slug="{{ tile.product.productSlug }}"
+    data-product-index="{{ productIndex }}"
+    data-qa-tile-type="{{ tileTemplate }}"
+    data-qa-product="{{ tile.product.displayName }}">
+
+    <span itemprop="product" itemscope itemtype="//schema.org/Product">
+        {%- if category and category.context == 'category' -%}
+            <meta itemprop="category" content="{{ core.flatNavigation[category.categorySlug].displayName }}" />
+        {%- endif -%}
+        {%- if category and category.context == 'brands' -%}
+            <meta itemprop="category" content="{{ category.categorySlug }}" />
+        {%- endif -%}
+        <meta itemprop="productID" content="{{ tile.product.styleNumber }}" />
+        <meta itemprop="url" content="{{ core.constants.urls.canonical ~ productUrl(tile.product.productSlug) }} | sanitize_url" />
+
+        {%- if wishlist and wishlist.search -%}
+            <div class="c-product-tile-controls__link-wrap js-product-tile-controls__link-wrap--wishlist">
+        {%- else -%}
+            <div class="c-product-tile-controls__link-wrap js-product-tile-controls__link-wrap" data-qa-product-tile-controls>
+        {%- endif -%}
+
+        {# Add tile overlay if product should be displayed even though it's sold out, based on URBNCat flag #}
+        {%- set visualBadge = tile.product.visualBadge -%}
+
+        {%- if visualBadge == 'displaySoldOut' -%}
+
+            <div class="c-product-tile-sold-out">
+
+                <p class="c-product-tile-sold-out__p">{{ t('product_meta-sold-out') }}</p>
+
+            </div>
+
+        {%- endif -%}
+
+            {% set _defaultImage = None %}
+
+            {# if image is missing, override image with scene 7 placeholder image #}
+            {%- if tile.product.isImageMissing -%}
+
+                {%- if tile.product.defaultImage -%}
+
+                    {% set _defaultImage = tile.product.defaultImage %}
+
+                {%- elif core.deviceCharacteristics.is_smallish -%}
+
+                    {% set _defaultImage = core.constants.thirdParty.default.scene7.tile_placeholder_image_small %}
+
+                {%- else -%}
+
+                    {% set _defaultImage = core.constants.thirdParty.default.scene7.tile_placeholder_image_large %}
+
+                {%- endif -%}
+
+            {%- endif -%}
+
+            {# Product Image; if shoppable, wrap in `a` tag #}
+            {%- if shoppable -%}
+
+                <a href="{{ productLink }}" class="c-product-tile__image-link js-product-tile__image-link" data-product-slug="{{ tile.product.productSlug }}" data-qa-product-tile {{ analytics }} {%- for attr in attributes -%}{{ attr }} {%- endfor -%}>
+
+            {%- endif -%}
+
+                {%- if displayBadges and visualBadge and visualBadge != 'displaySoldOut' -%}
+
+                    <span class="c-product-badge-visual {{ visualBadge }}">
+
+                        {{ _displayVisualBadge(visualBadge) }}
+
+                    </span>
+
+                {%- endif -%}
+
+                    {{ _displayTileImage(tile, colorCode, imageId, altImageId, defaultImage=_defaultImage, lazy=lazy) }}
+
+            {%- if shoppable -%}
+
+                </a>
+
+            {%- endif -%}
+
+
+            {%- if displayOverlayControls -%}
+
+                {# Product Tile Controls #}
+                <div class="o-row o-column o-large--12 o-extra-small--3 c-product-tile-controls" data-qa-product-tile-controls>
+
+                    {%- if tileTemplate == 'no_details' -%}
+
+                        {%- include 'core-product-tile-hidden-details.j2' -%}
+
+                    {%- endif -%}
+
+                    {%- include 'core-product-tile-quickshop.j2' -%}
+
+                    {# {%- include 'core-product-tile-favorites.j2' -%} #}
+
+                </div>
+
+            {%- endif -%}
+
+        </div>
+
+        {%- if tileTemplate != "no_details" and shoppable -%}
+
+        <div class="c-product-tile-details c-product-tile-details--{{ tileTemplate }}" data-qa-tile-details>
+
+            {# Product Title #}
+            {%- include 'core-product-tile-title.j2' -%}
+
+            {# Product Price #}
+            {%- include 'core-product-tile-price.j2' -%}
+
+            {# Product Swatches #}
+            {%- include 'core-product-tile-swatches.j2' -%}
+
+            {# Product Video Icon ^^^ UW-5140: now included with swatches, because videos are associated with colors #}
+
+            {# Product Badges #}
+            {%- include 'macros/display-tile-badges.j2' -%}
+
+            {# Product Reviews #}
+            {% if tile.reviews and tile.reviews.averageRating and tile.reviews.count and tile.reviews.count > 0 %}
+
+                {%- include 'core-product-tile-review-meta.j2' -%}
+
+            {% endif %}
+
+            {% if displayReviews %}
+
+                {%- include 'core-product-tile-review.j2' -%}
+
+            {% endif %}
+
+            {% if displaySize %}
+
+                {%- include 'core-product-tile-size.j2' -%}
+
+            {% endif %}
+
+            {# UW-2345: favorites are no longer implemented in WL #}
+            {# Product Likes #}
+            {# {%- if displayLikes -%}
+
+                {%- include 'macros/core-product-tile-likes.j2' -%}
+
+            {%- endif -%} #}
+
+            {# Add to Cart from Grid #}
+            {%- if isAddToCart -%}
+                {%- include 'wishlist-grid-add-to-bag.j2' -%}
+            {%- endif -%}
+        </div>
+
+        {%- endif -%}
+    </span>
+
+</div>
+
+{%- endmacro -%}
+
+{#-
+    _displayTileImage
+
+    Description:
+        Call productImage macro with tile-specific params.
+
+        Currently uses only the images and colorCode from the first sliceItem.
+-#}
+
+{%- macro _displayTileImage(tile, colorCode, imageId, altImageId, defaultImage=None, lazy=False) -%}
+    {# Aggressive guarding against empty sliceItems #}
+    {%- set sliceItems = tile.skuInfo.primarySlice.sliceItems | default([]) -%}
+    {%- set defaultImageIds = ['', none] -%}
+    {%- set firstSliceItem = sliceItems[0] | default({'code': '', 'images': defaultImageIds}) -%}
+    {%- set sliceImageIds = firstSliceItem.images | default(defaultImageIds) -%}
+
+    {%- set faceOutImageId = tile.faceOutImage and tile.faceOutImage.split('_')[2] | default(none) -%}
+    {%- set faceOutColor = tile.faceOutImage and tile.faceOutImage.split('_')[1] | default(none) -%}
+    {%- set hoverImageId = tile.hoverImage and tile.hoverImage.split('_')[2] | default(none) -%}
+    {%- set hoverColor = tile.hoverImage and tile.hoverImage.split('_')[1] | default(none) -%}
+
+    {%- if faceOutImageId -%}
+        {%- set imageId = faceOutImageId -%}
+        {%- set colorCode = faceOutColor -%}
+    {%- else -%}
+        {%- set defaultImageId = sliceImageIds[0] | default(defaultImageIds[0]) -%}
+    {%- endif -%}
+
+    {%- if hoverImageId -%}
+        {%- set altImageId = hoverImageId -%}
+    {%- else -%}
+        {%- set defaultAltImageId = sliceImageIds[1] | default(defaultImageIds[1]) -%}
+    {%- endif -%}
+
+    {%- set defaultColorCode = firstSliceItem.code | default('') -%}
+
+    {# Very defensive coding to ensure defaults #}
+    {% set _imageId = imageId | default(defaultImageId) %}
+    {% set _altImageId = altImageId | default(defaultAltImageId) %}
+    {% set _colorCode = colorCode | default(defaultColorCode) %}
+
+    {# Apparently 'very defensive' is not defensive enough, so it's time to be super defensive #}
+    {%- if _imageId -%}
+
+        {% set _safeImageId = _imageId -%}
+
+    {%- else -%}
+
+        {# Setting image code to 'b' as the default fallback if it's STILL not set at this point #}
+        {% set _safeImageId = "b" -%}
+
+    {%- endif -%}
+
+    {%- if _colorCode -%}
+
+        {% set _safeColorCode = _colorCode -%}
+
+    {%- else -%}
+
+        {% set _safeColorCode = tile.product.defaultColorCode -%}
+
+    {%- endif -%}
+
+    {# EU Suplier Sku logic for image style number #}
+    {% set imageStyle = tile.product.supplierSku if tile.product.supplierSku else tile.product.styleNumber %}
+
+    {{ productImageSchemaProps(
+            imageUrl(),
+            tile.product.styleNumber,
+            _safeColorCode,
+            _safeImageId
+        ) }}
+
+    {{ productImage(
+            imageUrl(),
+            imageStyle,
+            _safeColorCode,
+            _safeImageId,
+            altImageId=_altImageId,
+            preset=core.constants.imagePresets.productTileImagePreset,
+            altText=tile.product.displayName,
+            class='c-product-tile__img js-product-tile-img',
+            disableZoom=true,
+            defaultImage=defaultImage,
+            lazyImage=true,
+            lazyImageWidth=349,
+            lazyImageHeight=523,
+            lazy=lazy
+        ) }}
+{%- endmacro -%}
+
+{#-
+    _displayVisualBadge
+
+    Description:
+        Determine what visual badge to display on category tile.  Uses badge type and locale (core.language) to determine proper badge.
+-#}
+
+{%- macro _displayVisualBadge(badgeType) -%}
+
+    {% if badgeType == "topRated" %}
+
+        {% if core.language == "en-GB" %}
+
+            {%- include 'badges/top-rated-uk.j2' -%}
+
+        {% elif core.language == "fr-CA" %}
+
+            {%- include 'badges/top-rated-fr-ca.j2' -%}
+
+        {% elif core.language == "fr-FR" %}
+
+            {%- include 'badges/top-rated-fr.j2' -%}
+
+        {% elif core.language == "de-DE" %}
+
+            {%- include 'badges/top-rated-de.j2' -%}
+
+        {% elif core.language == "en-US" %}
+
+            {%- include 'badges/top-rated-us.j2' -%}
+
+        {% else %}
+
+            {%- include 'badges/top-rated-us.j2' -%}
+
+        {% endif %}
+
+    {% elif badgeType == "urbnExclusive" %}
+
+        {% if core.language == "en-GB" %}
+
+            {%- include 'badges/uo-exclusive-uk.j2' -%}
+
+        {% elif core.language == "fr-CA" %}
+
+            {%- include 'badges/uo-exclusive-fr-ca.j2' -%}
+
+        {% elif core.language == "fr-FR" %}
+
+            {%- include 'badges/uo-exclusive-fr.j2' -%}
+
+        {% elif core.language == "de-DE" %}
+
+            {%- include 'badges/uo-exclusive-de.j2' -%}
+
+        {% elif core.language == "en-US" %}
+
+            {%- include 'badges/uo-exclusive-us.j2' -%}
+
+        {% else %}
+
+            {%- include 'badges/uo-exclusive-us.j2' -%}
+
+        {% endif %}
+
+    {% elif badgeType == "preOrder" %}
+
+        {% if core.language == "en-GB" %}
+
+            {%- include 'badges/preorder-uk.j2' -%}
+
+        {% elif core.language == "fr-CA" %}
+
+            {%- include 'badges/preorder-fr-ca.j2' -%}
+
+        {% elif core.language == "fr-FR" %}
+
+            {%- include 'badges/preorder-fr.j2' -%}
+
+        {% elif core.language == "de-DE" %}
+
+            {%- include 'badges/preorder-de.j2' -%}
+
+        {% elif core.language == "en-US" %}
+
+            {%- include 'badges/preorder-us.j2' -%}
+
+        {% else %}
+
+            {%- include 'badges/preorder-us.j2' -%}
+
+        {% endif %}
+
+    {% endif %}
+
+{%- endmacro -%}
